@@ -1,0 +1,18 @@
+body {
+    background-color: #D9DDDC;
+}
+
+.img-container {
+    text-align: center;
+}
+
+/* Color Carousel */
+
+#colors {
+    text-align: center;
+    background-color: #D9DDDC;
+}
+
+#colors h1 {
+    padding: 10% 0 10% 0;
+}

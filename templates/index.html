@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Image Color Extractor</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous">
+    <link rel="stylesheet" href="/static/css/styles.css">
+</head>
+<body>
+<div>
+    <div class="container my-5 px-5">
+        <h1>Image Color Extractor</h1>
+        <p>Upload your image below and extract the color palette!</p>
+    </div>
+    <div class="container img-container px-5 my-5">
+        {% if filename: %}
+            <img src="{{ url_for('display', filename=filename) }}" alt="Unable to render image" class="img-fluid">
+            <form method="POST" action="{{ url_for('extract', filename=filename) }}">
+                <input type="submit" value="Extract Color Palette" class="btn btn-info my-2">
+            </form>
+        {% else: %}
+            <h3>Uploaded image will be displayed here</h3>
+        {% endif %}
+    </div>
+    <section id="colors">
+        <div class="container px-5">
+            <div id="color-carousel" class="carousel slide">
+                <div class="carousel-inner">
+                    {% if colors: %}
+                        {% for i in range(0, 10): %}
+                            {% if i == 0: %}
+                                <div class="carousel-item active" style="background-color: rgb{{colors[i][0], colors[i][1], colors[i][2]}};">
+                            {% else : %}
+                                    <div class="carousel-item" style="background-color: rgb{{colors[i][0], colors[i][1], colors[i][2]}};">
+                            {% endif %}
+                                        {% if brightness[i] < 127.5 %}
+                                        <h1 style="background-color: rgb{{colors[i][0], colors[i][1], colors[i][2]}}; color: white;">
+                                            {{hex_colors[i]}}</h1>
+                                        <div class="carousel-caption d-none d-md-block">
+                                            <h5 style="color: white;">RGB({{colors[i][0], colors[i][1], colors[i][2]}})</h5>
+                                            <p style="color: white;">{{ color_pct[i] }}%</p>
+                                        </div>
+                                        {% else: %}
+                                        <h1 style="background-color: rgb{{colors[i][0], colors[i][1], colors[i][2]}}; color: black;">
+                                            {{hex_colors[i]}}</h1>
+                                        <div class="carousel-caption d-none d-md-block">
+                                            <h5 style="color: black;">RGB({{colors[i][0], colors[i][1], colors[i][2]}})</h5>
+                                            <p style="color: black;">{{ color_pct[i] }}%</p>
+                                        </div>
+                                        {% endif %}
+                                    </div>
+                        {% endfor %}
+                    {% else: %}
+                        <div class="carousel-item active" style="background-color: rgb(100, 200, 77);">
+                            <h1 style="background-color: rgb(100, 200, 77);">Hex Color Code</h1>
+                            <div class="carousel-caption d-none d-md-block">
+                                <h5>Color Palette will be shown here</h5>
+                                <p>% of color in photo</p>
+                            </div>
+                        </div>
+                    {% endif %}
+                </div>
+
+                <button class="carousel-control-prev" type="button" data-bs-target="#color-carousel" data-bs-slide="prev">
+                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">Previous</span>
+                </button>
+                <button class="carousel-control-next" type="button" data-bs-target="#color-carousel" data-bs-slide="next">
+                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">Next</span>
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <div class="container my-3 px-5">
+        <div class="row">
+            <form method="POST" action="{{ url_for('submit') }}" enctype="multipart/form-data">
+                {% with messages = get_flashed_messages() %}
+                    {% if messages: %}
+                        <ul>
+                            {% for message in messages: %}
+                                <li>{{message}}</li>
+                            {% endfor%}
+                        </ul>
+                    {% endif %}
+                {% endwith %}
+                <input type="file" name="file" class="form-control" autocomplete="off" required>
+                <input type="submit" value="Submit Photo" class="btn btn-secondary my-3">
+            </form>
+        </div>
+    </div>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js" integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN" crossorigin="anonymous"></script>
+</body>
+</html>
